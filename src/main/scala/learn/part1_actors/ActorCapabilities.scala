@@ -63,5 +63,5 @@ object ActorCapabilities extends App {
   // 5 - forwarding messages
   // anish ---send Hi---> manish ---pass Hi---> anshu (sending a message to original sender)
   case class WirelessPhoneMessage(content: String, ref: ActorRef)
-
+  anish ! WirelessPhoneMessage("Hi", manish)
 }
