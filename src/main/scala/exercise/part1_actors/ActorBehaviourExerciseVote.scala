@@ -8,28 +8,25 @@ object ActorBehaviourExerciseVote extends App {
   case class Vote(candidate: String)
   case object VoteStatusRequest
   case class VoteStatusReply(candidate: Option[String])
-  class Citizen extends Actor {
 
+  class Citizen extends Actor {
     override def receive: Receive = {
-      case Vote(c)           => context.become(voted(c))
+      case Vote(c) => context.become(voted(c))
       case VoteStatusRequest => sender() ! VoteStatusReply(None)
     }
-
-    def voted(candidate: String): Receive = { case VoteStatusRequest =>
-      sender() ! VoteStatusReply(Some(candidate))
+    def voted(candidate: String): Receive = {
+      case VoteStatusRequest => sender() ! VoteStatusReply(Some(candidate))
     }
   }
+
   case class Voter(citizen: Set[ActorRef])
   class VoteCounter extends Actor {
-
     override def receive: Receive = awaitingCommand
-
     def awaitingCommand: Receive = {
       case Voter(citizens) =>
         citizens.foreach(citizenRef => citizenRef ! VoteStatusRequest)
         context.become(awaitingStatuses(citizens, Map()))
     }
-
     def awaitingStatuses(stillWaiting: Set[ActorRef], currentStats: Map[String, Int]): Receive = {
       case VoteStatusReply(None) => sender() ! VoteStatusRequest
       case VoteStatusReply(Some(candidate)) =>
@@ -56,5 +53,4 @@ object ActorBehaviourExerciseVote extends App {
 
   val voteCounter = actorSystem.actorOf(Props[VoteCounter], "voteCounter")
   voteCounter ! Voter(Set(anish, manish, manisha, anshu))
-
 }
