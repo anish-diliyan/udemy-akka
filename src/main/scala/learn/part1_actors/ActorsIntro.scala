@@ -21,7 +21,7 @@ object ActorsIntro extends App {
     3. Each Actor has a unique behavior, or a unique way of processing the message.
     4. Actors are really encapsulated and can't access the variables of other actors.
    */
-  // part2 - create actors, that will count words
+  // part2_testing - create actors, that will count words
   class WordCounterActor extends Actor {
     // internal data
     var totalWords = 0
